@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ANDY — Prática Clínica Integrada</title>
+  <meta name="theme-color" content="#1E88E5" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="assets/icon-192.png" />
+  <link rel="apple-touch-icon" href="assets/icon-192.png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <img class="brand-logo" src="assets/logo.png" alt="ANDY" />
+      <div class="brand-text">
+        <div class="brand-title">ANDY</div>
+        <div class="brand-sub">Assistente de Prática Clínica Integrada</div>
+      </div>
+    </div>
+
+    <div class="top-actions">
+      <button id="btnInstall" class="btn ghost" style="display:none;">Instalar</button>
+      <button id="btnBackup" class="btn ghost">Backup (.json)</button>
+      <label class="btn ghost filelike">
+        Importar
+        <input id="fileImport" type="file" accept="application/json" hidden />
+      </label>
+      <button id="btnHelp" class="btn">Ajuda</button>
+    </div>
+  </header>
+
+  <div class="app">
+    <aside class="sidebar">
+      <section class="panel">
+        <div class="panel-title">Profissional / Preceptor</div>
+        <div class="field">
+          <label>Nome</label>
+          <input id="profNome" placeholder="Dr(a). Nome do preceptor" />
+        </div>
+        <div class="grid2">
+          <div class="field">
+            <label>Telefone</label>
+            <input id="profFone" placeholder="(00) 00000-0000" />
+          </div>
+          <div class="field">
+            <label>Disciplina</label>
+            <input id="profDisc" value="Clínica Integrada" />
+          </div>
+        </div>
+        <div class="grid2">
+          <div class="field">
+            <label>Turno</label>
+            <select id="turno">
+              <option>Manhã</option>
+              <option>Tarde</option>
+              <option>Noite</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Local</label>
+            <input id="local" placeholder="Ambulatório / Sala" />
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-title">Calendário</div>
+        <div class="calendar-row">
+          <input id="data" type="date" />
+          <button id="btnHoje" class="btn ghost small">Hoje</button>
+        </div>
+        <div class="mini">
+          <div class="mini-label">Grupo</div>
+          <input id="grupo" placeholder="Ex.: G3" />
+        </div>
+        <div class="mini">
+          <div class="mini-label">Turma</div>
+          <input id="turma" placeholder="Ex.: Medicina 6º sem" />
+        </div>
+
+        <div class="actions">
+          <button id="btnNovoAluno" class="btn">+ Novo aluno</button>
+          <button id="btnGerarPDFDia" class="btn ghost">PDF do Dia</button>
+          <button id="btnRelatorioAluno" class="btn ghost">Relatório do Aluno</button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-title">Alunos do grupo (6)</div>
+        <div id="listaAlunos" class="list"></div>
+        <div class="hint">Dica: cadastre 6 alunos por preceptor. O ANDY salva automaticamente.</div>
+      </section>
+    </aside>
+
+    <main class="main">
+      <section class="doc card">
+        <div class="doc-head">
+          <div class="doc-title">Prontuário do Aluno</div>
+          <div class="doc-meta" id="docMeta"></div>
+        </div>
+
+        <div class="grid3">
+          <div class="field">
+            <label>Aluno</label>
+            <input id="alunoNome" placeholder="Nome do aluno" />
+          </div>
+          <div class="field">
+            <label>Matrícula</label>
+            <input id="alunoMat" placeholder="Matrícula" />
+          </div>
+          <div class="field">
+            <label>Telefone (WhatsApp)</label>
+            <input id="alunoFone" placeholder="(00) 00000-0000" />
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="section-title">Registro do dia</div>
+        <div class="grid3">
+          <div class="field">
+            <label>Presença</label>
+            <select id="presenca">
+              <option value="Presente">Presente</option>
+              <option value="Atraso">Atraso</option>
+              <option value="Falta">Falta</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Falta justificada?</label>
+            <select id="justificada">
+              <option value="Não">Não</option>
+              <option value="Sim">Sim</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Pendência de reposição</label>
+            <select id="reposicao">
+              <option value="Não">Não</option>
+              <option value="Sim">Sim</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label>Observações do dia</label>
+          <textarea id="obsDia" placeholder="Ex.: participou bem da discussão; faltou por motivo X..."></textarea>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="section-title">Avaliação prática (0 · 3 · 5)</div>
+        <div class="criteria" id="criteria"></div>
+
+        <div class="score-row">
+          <div class="score">
+            <div class="score-label">Score do dia</div>
+            <div class="score-value" id="scoreDia">—</div>
+          </div>
+          <div class="score">
+            <div class="score-label">Nota sugerida (0–10)</div>
+            <div class="score-value" id="notaSug">—</div>
+          </div>
+          <button id="btnSalvar" class="btn">Salvar</button>
+          <button id="btnLimpar" class="btn ghost">Limpar campos</button>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="section-title">Feedback pedagógico</div>
+        <div class="grid2">
+          <div class="field">
+            <label>Pontos fortes</label>
+            <textarea id="pontosFortes" placeholder="Ex.: boa comunicação; postura ética; organização..."></textarea>
+          </div>
+          <div class="field">
+            <label>Pontos a desenvolver</label>
+            <textarea id="pontosDesenvolver" placeholder="Ex.: revisar anamnese dirigida; treinar apresentação do caso..."></textarea>
+          </div>
+        </div>
+        <div class="grid2">
+          <div class="field">
+            <label>Sugestão de estudo (até a próxima prática)</label>
+            <textarea id="sugestaoEstudo" placeholder="Ex.: tosse crônica; DDx; semiologia respiratória..."></textarea>
+          </div>
+          <div class="field">
+            <label>Mensagem encorajadora (opcional)</label>
+            <textarea id="mensagem" placeholder="Ex.: Evolução perceptível. Continue participando!"></textarea>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="section-title">Histórico do aluno</div>
+        <div id="historico" class="history"></div>
+      </section>
+
+      <section class="doc card">
+        <div class="doc-head">
+          <div class="doc-title">Caso Clínico do Dia (Anonimizado)</div>
+          <div class="doc-meta"><span class="pill">Uso acadêmico</span> <span class="pill">Sem identificação do paciente</span></div>
+        </div>
+
+        <div class="grid3">
+          <div class="field">
+            <label>Código do caso</label>
+            <input id="casoCodigo" placeholder="Ex.: CI-120326-01" />
+          </div>
+          <div class="field">
+            <label>Sexo</label>
+            <select id="casoSexo">
+              <option value="">—</option>
+              <option>F</option>
+              <option>M</option>
+              <option>Outro/NI</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Faixa etária (anos)</label>
+            <input id="casoIdade" placeholder="Ex.: 34" inputmode="numeric" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Queixa principal (QP)</label>
+          <textarea id="casoQP"></textarea>
+        </div>
+        <div class="field">
+          <label>História clínica resumida (HDA)</label>
+          <textarea id="casoHDA"></textarea>
+        </div>
+        <div class="field">
+          <label>Achados relevantes (exame físico / exames)</label>
+          <textarea id="casoAchados"></textarea>
+        </div>
+
+        <div class="grid2">
+          <div class="field">
+            <label>Hipóteses diagnósticas discutidas</label>
+            <textarea id="casoHipoteses"></textarea>
+          </div>
+          <div class="field">
+            <label>Conduta discutida</label>
+            <textarea id="casoConduta"></textarea>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Pontos-chave para estudo (do grupo)</label>
+          <textarea id="casoPontos"></textarea>
+        </div>
+
+        <div class="actions">
+          <button id="btnSalvarCaso" class="btn">Salvar caso do dia</button>
+          <button id="btnPDFCaso" class="btn ghost">PDF do Caso</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="dlgHelp">
+    <div class="dlg">
+      <div class="dlg-head">
+        <div class="dlg-title">Como usar o ANDY</div>
+        <button class="btn ghost small" id="btnFecharHelp">Fechar</button>
+      </div>
+      <div class="dlg-body">
+        <ol>
+          <li>Preencha <b>Profissional/Preceptor</b>, <b>Turma</b>, <b>Grupo</b>, <b>Data</b> e <b>Local</b>.</li>
+          <li>Cadastre até <b>6 alunos</b> no grupo (botão “+ Novo aluno”).</li>
+          <li>Selecione um aluno na lista e lance <b>Presença</b>, <b>Avaliação 0–3–5</b>, <b>Feedback</b> e observações.</li>
+          <li>No fim, gere <b>PDF do Dia</b> ou <b>Relatório do Aluno</b>. Se estiver offline, o ANDY usa o modo de impressão do navegador.</li>
+          <li>Use <b>Backup</b> para exportar tudo em .json (útil para trocar de aparelho).</li>
+        </ol>
+        <p class="small">⚠️ O bloco “Caso Clínico” é <b>anonimizado</b>. Não inclua nome, prontuário, endereço ou qualquer identificação do paciente.</p>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- jsPDF (opcional). Se não carregar, o ANDY usa impressão para PDF. -->
+  <script defer src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"></script>
+
+  <script src="app.js"></script>
+</body>
+</html>
